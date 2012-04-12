@@ -1,0 +1,6 @@
+To install, you will have to:
+* Import install.sql
+* Create a user for the database
+* Set permissions for the user
+* Set pool_update.sh to run at regular intervals (not absolutely required, but a good idea)
+* Set some settings in www/includes/requiredFunctions.php
