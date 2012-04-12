@@ -1,0 +1,4 @@
+If you already have an mmcFE installation up and running and want to upgrade, back up your database and import upgrade.sql. 
+This should upgrade your schema if there have been any changes but not change your site configuration. 
+
+If this is a new installation,  import the install.sql schema and you should be good to go. 
