@@ -135,7 +135,7 @@ if ($returnError) { echo "<div class=\"message errormsg\"><p>".antiXss($returnEr
                 <div class="block_content" style="padding:10px;">
 
 		<!--Begin main page edits-->
-		<form action="/adminPanel" method="post">
+		<form action="/adminPanel.php" method="post">
 			<input type="hidden" name="act" value="UpdateMainPageSettings">
 			Page Title <input type="text" name="pageTitle" size="50" value="<?php echo antiXss($settings->getsetting("pagetitle"));?>"><br/>
 			Header Title <input type="text" name="headerTitle" size="45" value="<?php echo antiXss($settings->getsetting("websitename"));?>"><br/>
@@ -223,7 +223,7 @@ if ($returnError) { echo "<div class=\"message errormsg\"><p>".antiXss($returnEr
                  <div class="block_content" style="padding:10px;">
 
 	<ul><li><font color="orange">Search by IP Address, Userame, or UserId</font></li></ul>
-	<form action="/adminPanel" method="post">
+	<form action="/adminPanel.php" method="post">
 		<input type="hidden" name="act" value="userControl">
 		Search String &nbsp;
 		<input type="text" name="searchStr" value="%">
