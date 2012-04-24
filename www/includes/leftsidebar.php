@@ -14,12 +14,12 @@
 	?>
 	<div style="margin-left:-10px;p-align:center;text-align:center;">
 		<!--Login Input Field-->
-		<form action="/login" method="post" id="loginForm">
+		<form action="/login.php" method="post" id="loginForm">
 			<p><input type="text" name="username" value="" id="userForm" maxlength="20"></p>
 			<p><input type="password" name="password" value="" id="passForm" maxlength="20"></p>
 			<p><input type="submit" class="submit small" value="Login"></p>
 		</form>
-		<p><a href="/lostPass"><font size="1">Forgot your password?</font></a></p>
+		<p><a href="/lostPass.php"><font size="1">Forgot your password?</font></a></p>
 	</div>
 
 	<?php

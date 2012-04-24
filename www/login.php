@@ -40,19 +40,19 @@ if(isset($userExists)){
 
 				//Display output message
 				$outputMessage = "Login Successful.";
-				header("Location: news");
+				header("Location: news.php");
 
 			}else{
 				$outputMessage =  "Wrong username or password.";
 				sleep(2);
-				header("Location: index");
+				header("Location: index.php");
 			}
 		}
 	}
 }else{
 	$outputMessage = "User name doesn't exist.";
 	sleep(2);
-	header("Location: index");
+	header("Location: index.php");
 }
 
 //sleep(1);
