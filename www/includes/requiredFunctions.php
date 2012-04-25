@@ -16,10 +16,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Website Reference:http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-// RPC Bitcoind Credentials
+// RPC Litecoind Credentials
 //
 $rpcType = "http"; 				// http or https
-$rpcUsername = "user"; 				// username as specified in your bitcoin.conf configuration file
+$rpcUsername = "user"; 				// username as specified in your litecoin.conf configuration file
 $rpcPassword = "pass"; 				// password
 $rpcHost = "localhost:8333";
 

@@ -75,9 +75,9 @@
 			echo "<span id='tt'><img src='images/questionmark.png' height='15px' width='15px' title='Total shares since last found block'></span><br>";
 			echo "Pool Valid: <b><i>".$nextblock_shares."</i></b><br><br>";
 
-			echo "<u><b>Estimated Per Payout</b></u><br><b><i>".round($userRoundEstimate, 8)."</i> <font size='1px'>BTC</font></b><br><br>";
+			echo "<u><b>Estimated Per Payout</b></u><br><b><i>".round($userRoundEstimate, 8)."</i> <font size='1px'>LTC</font></b><br><br>";
 
-			echo "<u><b>Account Balance</b></u><br><b><i>".$currentBalance." </i><font size='1px'>BTC</font></b><br/><br>";
+			echo "<u><b>Account Balance</b></u><br><b><i>".$currentBalance." </i><font size='1px'>=LTC</font></b><br/><br>";
 			//echo "</p>";
 
 		?>
