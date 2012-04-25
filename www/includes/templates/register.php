@@ -33,7 +33,7 @@
 
                  <div class="block_content" style="padding:10px;">
 		 <p>
-		 <form action="/register.php" method="post">
+		 <form action="register.php" method="post">
 		        <input type="hidden" name="act" value="attemptRegister">
 		        <table width="90%" border="0">
 		        <tr><td>Username:</td><td><input type="text" class="text tiny" name="user" value="" size="15" maxlength="20"></td></tr>
