@@ -4,7 +4,7 @@
 
 // check if logged in
 if( !$cookieValid ){
-        header("Location: /stats");
+        header("Location: /stats.php");
         exit();
 }
 
