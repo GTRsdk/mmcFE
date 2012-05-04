@@ -60,12 +60,12 @@ echo "<tr><td class=\"leftheader\">Current Total Miners</td><td>" . number_forma
 
 	$current_block_no = $bitcoinController->query("getblocknumber");
 
-echo "<tr><td class=\"leftheader\">Current Block</td><td><a href=\"http://blockexplorer.com/b/" . $current_block_no . "\" target='_new'>";
+echo "<tr><td class=\"leftheader\">Current Block</td><td><a href=\"http://abe.liteco.in/chain/Litecoin/b/" . $current_block_no . "\" target='_new'>";
 echo number_format($current_block_no) . "</a></td></tr>";
 
 	$show_difficulty = round($difficulty, 2);
 
-echo "<tr><td class=\"leftheader\">Current Difficulty</th><td><a href=\"http://dot-bit.org/tools/nextDifficulty.php\" target='_new'>" . number_format($show_difficulty) . "</a></td></tr>";
+echo "<tr><td class=\"leftheader\">Current Difficulty</th><td><a href=\"http://allchains.info/" target='_new'>" . number_format($show_difficulty) . "</a></td></tr>";
 
 	$result = mysql_query("SELECT n.blockNumber, n.confirms, n.timestamp FROM winning_shares w, networkBlocks n WHERE w.blockNumber = n.blockNumber ORDER BY w.blockNumber DESC LIMIT 1");
 
@@ -77,7 +77,7 @@ echo "<tr><td class=\"leftheader\">Current Difficulty</th><td><a href=\"http://d
                 $found_block_no = $resultrow->blockNumber;
                 $confirm_no = $resultrow->confirms;
 
-echo "<tr><td class=\"leftheader\">Last Block Found</td><td><a href=\"http://blockexplorer.com/b/" . $found_block_no . "\" target='_new'>" . number_format($found_block_no) . "</a></td></tr>";
+echo "<tr><td class=\"leftheader\">Last Block Found</td><td><a href=\"http://abe.liteco.in/chain/Litecoin/b/" . $found_block_no . "\" target='_new'>" . number_format($found_block_no) . "</a></td></tr>";
 
                 $time_last_found = $resultrow->timestamp;
 
