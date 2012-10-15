@@ -8,5 +8,4 @@ To install, you will have to:
 Graphs in statsAuth.php may not work unless you have PHP 5.3 (not 5.4).
 It might work on 5.2, but I have not tested that.
 
-NOTE: I didn't realize that if you have the rewrite module loaded in your webserver, and the .htaccess is used, you shouldn't have any issue running this. Since I didn't know that, a number of files had the .php added.
-If the current code does not work, then use the git reset command to go back to the Initial Upload commit.
+NOTE: This file was added by GTRsdk.
