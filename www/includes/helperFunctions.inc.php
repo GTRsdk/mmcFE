@@ -1,26 +1,18 @@
 <?php
-$includeDirectory = "/sites/mmc/www/includes/";
 
-//required functions
-include($includeDirectory."requiredFunctions.php");
-connectToDb();
+function estimate_user_rewards($block = NULL, $uid = NULL) {
+   global $userReward, $donation;
 
-//Get site percentage
-$sitePercent = 0;
-$sitePercentQ = mysql_query("SELECT value FROM settings WHERE setting='sitepercent'");
-if ($sitePercentR = mysql_fetch_object($sitePercentQ)) $sitePercent = $sitePercentR->value;
+	//Get site percentage
+	$sitePercent = 0;
+	$sitePercentQ = mysql_query("SELECT value FROM settings WHERE setting='sitepercent'");
+	if ($sitePercentR = mysql_fetch_object($sitePercentQ)) $sitePercent = $sitePercentR->value;
 
-$overallReward = 0;
+	$overallReward = 0;
 
-// score vars
-$f = 1;
-$f = $sitePercent / 100;
-
-// command line args
-if (isset($argv["1"])) { $lastNshares = $argv["1"]; } else { print("usage: $argv[0] <last N shares> <blocknumber>\n"); die(); }
-if (isset($argv["2"])) { $block = $argv["2"]; } else { print("usage: $argv[0] <last N shares> <blocknumber>\n"); die(); }
-
-if (isset($block)) {
+	// score vars
+	$f = 1;
+	$f = $sitePercent / 100;
 
 	// LastNshares - determine block number lower boundary where N shares is met
 	$l_bound = 0;
@@ -57,8 +49,8 @@ if (isset($block)) {
 		$totalRoundShares = $totalRoundSharesR->id;
 
 		$userListCountQ = mysql_query("SELECT userId, sum(id) as id FROM ( ".
-						  "SELECT DISTINCT userId, sum(count) as id FROM shares_uncounted WHERE blockNumber <= ".$block." AND blockNumber >= ".$l_bound." GROUP BY userId ".
-						  "UNION DISTINCT SELECT userId, sum(count) as id FROM shares_counted WHERE blockNumber <= " .$block. " AND blockNumber >= ".$l_bound." GROUP BY userId ".
+						  "SELECT DISTINCT userId, sum(count) as id FROM shares_uncounted WHERE blockNumber <= ".$block." AND blockNumber >= ".$l_bound." AND userId = ".$uid." GROUP BY userId ".
+						  "UNION DISTINCT SELECT userId, sum(count) as id FROM shares_counted WHERE blockNumber <= " .$block. " AND blockNumber >= ".$l_bound." AND userId = ".$uid." GROUP BY userId ".
 						 " )a GROUP BY userId");
 
 		while ($userListCountR = mysql_fetch_object($userListCountQ)) {
@@ -102,17 +94,12 @@ if (isset($block)) {
 				//Update account balance & site ledger
 				$userReward = number_format($totalReward, 8, '.', '');
 				$donation = number_format($donateAmount, 8, '.', '');
-				echo $username.":".$ownerId." Tot_rew: ".$userReward." Act_type: ".account_type($ownerId)." Dnt_amt: " .$donation. " blk: " .$block. " shares: " .$uncountedShares. "\n";
+
+				
+				echo "<tr><td>" .$block. "</td><td>" .$userReward. "</td><td>" .$uncountedShares. "</td><td>" .$donation. "</td><td></td></tr>";
 			}
-		}
-		// find pool reward
-		if (isset($B)) {
-		 $poolReward = $B -$overallReward;
 		}
 	}
 }
 
-echo "\nMiner Allocated: ".$overallReward."\n";
-echo "Pool Allocated: ".round((50 - $overallReward), 8)."\n";
-
-echo "Total: ".($overallReward + (round((50 - $overallReward), 8)))."\n\n";
+?>

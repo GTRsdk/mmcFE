@@ -49,7 +49,7 @@
 
 		<div class="block_content" style="padding:10px;">
 
-<p>This is a private pool. You could sign up and mine, but I can't promise you'd get your coins.</p>
+<p>About this Pool</p>
 
 		</div><!-- nested block ends -->
 		<div class="bendl"></div>

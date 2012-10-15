@@ -14,12 +14,12 @@
 	?>
 	<div style="margin-left:-10px;p-align:center;text-align:center;">
 		<!--Login Input Field-->
-		<form action="login.php" method="post" id="loginForm">
+		<form action="/login" method="post" id="loginForm">
 			<p><input type="text" name="username" value="" id="userForm" maxlength="20"></p>
-			<p><input type="password" name="password" value="" id="passForm" maxlength="20"></p>
+			<p><input type="password" name="password" value="" id="passForm" maxlength="20" autocomplete="off"></p>
 			<p><input type="submit" class="submit small" value="Login"></p>
 		</form>
-		<p><a href="lostPass.php"><font size="1">Forgot your password?</font></a></p>
+		<p><a href="/lostPass"><font size="1">Forgot your password?</font></a></p>
 	</div>
 
 	<?php
@@ -41,7 +41,7 @@
 			echo "<font size='1px'><i>You are <a href='/osList'>donating</a> <b></i>" .antiXss($donatePercent)."%</b> of your earnings.</font><br>";
 			*/
 
-			echo "<b><u>Your Current Hashrate</u></b><br><i><b>".$currentUserHashrate." KH/s</b></i><br/><br/>";
+			echo "<b><u>Your Current Hashrate</u></b><br><i><b>".$currentUserHashrate." MH/s</b></i><br/><br/>";
 
 			echo "<u><b>Paid Shares</b></u> <span id='tt'><img src='images/questionmark.png' height='15px' width='15px' ".
 			     "title='All submitted shares from previous rounds which are already accounted and ".
@@ -57,7 +57,7 @@
 			}
 
 			echo "<u><b>Unpaid Shares</b></u> ".
-			     "<span id='tt'><img src='images/questionmark.png' height='15px' width='15px' title='Total of all shares yet to be paid since the last confirmed ".
+			     "<span id='tt'><img src='images/questionmark.png' height='15px' width='15px' title='Submitted shares between the last 120 confirms ".
 			     "block until now.'></span>".
 			     "<br>";
 
@@ -69,13 +69,18 @@
 									  "SELECT blockNumber FROM networkBlocks WHERE confirms != '' AND confirms < 120 ".
 									   "ORDER BY blockNumber ASC LIMIT 1)"));
 			$pending_shares = $pending_sharesQ->count;
-			if ($pending_shares) { $nextblock_shares = ($totalOverallShares - $pending_shares); } else { $nextblock_shares = $totalOverallShares; }
+			if ($pending_shares) {
+				$nextblock_shares = ($totalOverallShares - $pending_shares);
+			} else {
+				$nextblock_shares = $totalOverallShares;
+			}
+			if ($nextblock_shares < 0) { $nextblock_shares = "Updating..."; }
 
-			echo "<u><b>Current Round Shares </b></u>";
-			echo "<span id='tt'><img src='images/questionmark.png' height='15px' width='15px' title='Total shares since last found block'></span><br>";
+			echo "<u><b>Round Shares </b></u>";
+			echo "<span id='tt'><img src='images/questionmark.png' height='15px' width='15px' title='Submitted shares since last found block (ie. round shares)'></span><br>";
 			echo "Pool Valid: <b><i>".$nextblock_shares."</i></b><br><br>";
 
-			echo "<u><b>Estimated Per Payout</b></u><br><b><i>".round($userRoundEstimate, 8)."</i> <font size='1px'>BTC</font></b><br><br>";
+			echo "<u><b>Round Estimate</b></u><font size='1'></font></u><br><b><i>".round($userRoundEstimate, 8)."</i> <font size='1px'>BTC</font></b><br><br>";
 
 			echo "<u><b>Account Balance</b></u><br><b><i>".$currentBalance." </i><font size='1px'>BTC</font></b><br/><br>";
 			//echo "</p>";
@@ -93,7 +98,7 @@
 		<b><font size="1">
 		Stats last updated:</b>
 		<br><i>
-		<?php echo "".date("g:i:s A", $settings->getsetting('statstime'))." EST"; ?>
+		<?php echo "".date("H:i:s", $settings->getsetting('statstime'))." GMT+2"; ?>
 		<br>
 		(updated every 60 secs)
 		</font></i><br/>

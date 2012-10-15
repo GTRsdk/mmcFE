@@ -1,6 +1,10 @@
 <?php
 
 include ("includes/templates/header.php");
+//include("includes/userStatsAuth.inc.php");
+
+// Interval in Hours for charts
+$interval = "20";
 
 $goodMessage = "";
 $returnError = "";
@@ -19,26 +23,6 @@ if (isset($_POST["act"]))
 	if (isset($_POST["authPin"])) { $inputAuthPin = mysql_real_escape_string(hash("sha256", $_POST["authPin"].$salt)); } else { $inputAuthPin = ""; }
 	//Make sure an authPin is set and valid when $act is active
 	if($act) {
-		// Site Admin General Settings (pin needed)
-		if($act == "UpdateMainPageSettings" && $authPin == $inputAuthPin) {
-			try {
-				$settings->setsetting("sitepayoutaddress", mysql_real_escape_string($_POST["paymentAddress"]));
-				$settings->setsetting("sitepercent", mysql_real_escape_string($_POST["percentageFee"]));
-				$settings->setsetting("websitename", mysql_real_escape_string($_POST["headerTitle"]));
-				$settings->setsetting("pagetitle", mysql_real_escape_string($_POST["pageTitle"]));
-				$settings->setsetting("slogan", mysql_real_escape_string($_POST["headerSlogan"]));
-				$settings->setsetting("siterewardtype", mysql_real_escape_string($_POST["rewardType"]));
-				$settings->loadsettings(); //refresh settings
-				$goodMessage = "Successfully updated general settings";
-			} catch (Exception $e) {
-				$returnError = "Database Failed - General settings was not updated";
-			}
-		} else {
-			if($act == "UpdateMainPageSettings" && $authPin != $inputAuthPin) {
-				$returnError = "Authorization Pin Invalid or not entered.";
-			}
-		}
-
 		// User Control (no pin needed)
 		if(($act == "userControl") && (empty($_POST["searchStr"]))) {
 
@@ -65,7 +49,7 @@ if (isset($_POST["act"]))
 				$search_results .= "<tr style='background-color:#fff;'><td>" .$row['id']. "</td><td>" .$row["username"]. "</td><td>" .round($row["round_estimate"], 4).
 						   "</td><td class='row_email' style='display:none;'>" .$row["loggedIp"]."</td><td class='row_email' style='display:none;'>" .$row["email"]. "</td><td>" .$row["share_count"].
 						   "</td><td>" .$row["stale_share_count"]. "</td><td>" .$row["shares_this_round"].
-						   "</td><td>" .$row["donate_percent"]. "</td><td>" .round(($row["hashrate"] / 1024), 2). "</td>".
+						   "</td><td>" .$row["donate_percent"]. "</td><td>" .round(($row["hashrate"] / 1000), 2). "</td>".
 						   "<td>" .@round(($row['stale_share_count'] / $row['share_count'] * 100), 2). "</td></tr>";
 				$count++;
 				$search_id = $row["id"];
@@ -122,114 +106,24 @@ if (isset($_POST["act"]))
 //Display Error and Good Messages(If Any)
 if ($goodMessage) { echo "<div class=\"message success\"><p>".antiXss($goodMessage)."</p></div>"; }
 if ($returnError) { echo "<div class=\"message errormsg\"><p>".antiXss($returnError)."</p></div>"; }
+
+// check if $searchStr is numeric so we can look at users charts
+if (is_numeric($searchStr)) { $this_userid = $searchStr; } else { $this_userid = 0; }
 ?>
 
 <div id="AdminContainer">
-                <div class="block" style="clear:none;">
-                 <div class="block_head">
-                  <div class="bheadl"></div>
-                  <div class="bheadr"></div>
-			<h1>Site Admin General Settings</h1>
-                </div>
-
-                <div class="block_content" style="padding:10px;">
-
-		<!--Begin main page edits-->
-		<form action="/adminPanel" method="post">
-			<input type="hidden" name="act" value="UpdateMainPageSettings">
-			Page Title <input type="text" name="pageTitle" size="50" value="<?php echo antiXss($settings->getsetting("pagetitle"));?>"><br/>
-			Header Title <input type="text" name="headerTitle" size="45" value="<?php echo antiXss($settings->getsetting("websitename"));?>"><br/>
-			Header Slogan <input type="text" name="headerSlogan" size="40" value="<?php echo antiXss($settings->getsetting("slogan"));?>"><br/>
-			Percentage Fee <input type="text" name="percentageFee" size="5" maxlength="10" value="<?php echo antiXss($settings->getsetting("sitepercent")); ?>">%<br/>
-			Fee Address <input type="text" name="paymentAddress" size="50" value="<?php echo antiXss($settings->getsetting("sitepayoutaddress")); ?>"><br/>
-			Default Reward Type <select name="rewardType" size="1">
-			<option value="1" <?php if ($settings->getsetting("siterewardtype") == 1) echo "selected"; ?>>PPLNS</option>
-			</select>
-			<br/><br/>
-			Authorization Pin <input type="password" size="4" maxlength="4" name="authPin"><br/><br>
-			<input type="submit" class="" value=" Update Site Settings ">
-		</form>
-                </div>          <!-- nested block ends -->
-                <div class="bendl"></div>
-                <div class="bendr"></div>
-                </div>
-
-
-
-
-                <div class="block" style="clear:none;">
-                 <div class="block_head">
-                  <div class="bheadl"></div>
-                  <div class="bheadr"></div>
-			<h1>Financial Statistics</h1>
-                </div>
-
-                <div class="block_content" style="padding:10px;">
-	<?php
-
-	$bitcoinController = new BitcoinClient($rpcType, $rpcUsername, $rpcPassword, $rpcHost);
-
-	//$sitewallet = mysql_query("SELECT sum(balance) FROM `accountBalance` WHERE `balance` > 0") or sqlerr(__FILE__, __LINE__);
-	$sitewallet = mysql_query("SELECT sum(balance) FROM `accountBalance`") or sqlerr(__FILE__, __LINE__);
-	$sitewalletq = mysql_fetch_row($sitewallet);
-
-	$unconf_blocksQ = mysql_query("SELECT DISTINCT confirms from `networkBlocks` WHERE `confirms` < 120 AND `confirms` > 0");
-	$sitePercentQ = mysql_query("SELECT value FROM settings WHERE setting='sitepercent'");
-
-	if ($sitePercentR = mysql_fetch_object($sitePercentQ)) {
-	$sitePercent = $sitePercentR->value;
-	}
-
-	$unconf_blocks = mysql_num_rows($unconf_blocksQ);
-	$unconf_income = ($unconf_blocks * (50 * ($sitePercent / 100)));
-	$usersbalance = $sitewalletq[0] / 1;
-	$user_reserve = ($unconf_blocks);
-	$donation_reserve = $settings->getsetting("tobedonated");
-	$balance = $bitcoinController->query("getbalance");
-	$subtotal = $balance - $usersbalance - $donation_reserve;
-
-
-	echo "Current Block Number: ".$bitcoinController->getblocknumber()."<br>";
-	echo "Current Difficulty: ".$bitcoinController->query("getdifficulty")."<br>";
-
-	// Enable this for pool efficiency stats to be shown (useless stat imo)
-	$results = mysql_query("SELECT (1 - (SUM(stale_share_count)/SUM(share_count))) * 100 AS efficiency FROM webUsers") or sqlerr(__FILE__, __LINE__);
-	$row = mysql_fetch_object($results);
-	echo "Pool Efficiency: ". number_format($row->efficiency, 2) . "%";
-	echo "<br><br>";
-
-	echo "Wallet Balance: ".$balance."<br>";
-	echo "Held for Users: ".$usersbalance."<br>";
-	echo "Held for Donation: ".$donation_reserve."<br>";
-	echo "Immature Blocks: " .$user_reserve. "<br>";
-	//echo "Pool Immature: " .$unconf_income. "<br>";
-	echo "<br>";
-	echo "Actual Liquid Assets: $subtotal<br>";
-	//echo "Forecasted Assets: " .($subtotal + $unconf_income). "<br>";
-
-	?>
-        </div>          <!-- nested block ends -->
-
-        <div class="bendl"></div>
-        <div class="bendr"></div>
-       </div>
-
-
-
-
-
 
                  <div class="block" style="clear:none;">
                  <div class="block_head">
                   <div class="bheadl"></div>
                   <div class="bheadr"></div>
-			<h1>User Control</h1>
+			<h2>User Control</h2>
                  </div>
 
                  <div class="block_content" style="padding:10px;">
 
 	<ul><li><font color="orange">Search by IP Address, Userame, or UserId</font></li></ul>
-	<form action="/adminPanel" method="post">
+	<form action="/adminUserControl" method="post">
 		<input type="hidden" name="act" value="userControl">
 		Search String &nbsp;
 		<input type="text" name="searchStr" value="%">
@@ -341,7 +235,9 @@ if ($returnError) { echo "<div class=\"message errormsg\"><p>".antiXss($returnEr
                 </div>
 
 
-</div>
+
+
+		</div>
                 </div>          <!-- .sidebar_content ends -->
 
 

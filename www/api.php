@@ -2,7 +2,9 @@
 //if (!isset($_GET["api_key"]))
 //	exit;
 
-$includeDirectory = "/var/www/pool/www/includes/";
+//if ($_SERVER["REMOTE_ADDR"] == "1.1.1.1") { die("access blocked because you are requesting this data too often.  Please request this data only once per minute and contact annihilat@papa.mainframe.nl when you have fixed it. ."); }
+
+$includeDirectory = "/sites/mmc/www/includes/";
 
 include($includeDirectory."requiredFunctions.php");
 
@@ -27,6 +29,7 @@ include($includeDirectory."requiredFunctions.php");
 		var $hashrate = null;
 		var $workers = null;
 		var $shares_this_round = null;
+		var $last_block = null;
 	}
 
 	$userid = NULL;
@@ -92,6 +95,12 @@ if (!empty($_GET["api_key"])) {
 	} else {
 		$server->shares_this_round = $settings->getsetting("currentroundshares");
 	}
+
+	// last winning block
+	$lastBlockQ = mysql_fetch_object(mysql_query("SELECT blockNumber FROM `winning_shares` ORDER BY blockNumber DESC LIMIT 1"));
+	$lastBlock = $lastBlockQ->blockNumber;
+	$server->last_block = $lastBlock;
+
 	echo json_encode($server);
 }
 

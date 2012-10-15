@@ -4,7 +4,7 @@
 	include("includes/userStatsAuth.inc.php");
 
 	// Interval in Hours
-	$interval = "20";
+	$interval = "96";
 
 	// check if logged in
 	if( !$cookieValid ){
@@ -18,6 +18,8 @@
 	$time = $time[1] + $time[0];
 	$start = $time;
 
+	// check which graph to display
+	if (!isset($_GET["graph"])) { $graph = "mine"; } else { $graph = $_GET["graph"]; }
 ?>
 
 <div class="block withsidebar">
@@ -60,7 +62,7 @@
 
                 <div class="sidebar_content">
 
-<div class="message warning" style="width:auto;"><p>This page and its contents are in Beta testing.  Data may sometimes be inaccurate.</p></div>
+<!-- <div class="message warning" style="width:auto;"><p>This page and its contents are in Beta testing.  Data may sometimes be inaccurate.</p></div> -->
 
 	<!-- START User Stats Block -->
 
@@ -70,46 +72,32 @@
                   <div class="bheadr"></div>
                   <h2>User Stats</h2>
 			<ul class="tabs">
-				<li><a href="#mine">Mine &nbsp;</a></li>
-				<li><a href="#pool">Pool &nbsp;</a></li>
-				<li><a href="#both">Both</a></li>
+				<li><a href="?graph=mine">Mine &nbsp;</a></li>
+				<li><a href="?graph=pool">Pool &nbsp;</a></li>
+				<li><a href="?graph=both">Both</a></li>
 			</ul>
                 </div>
 
-                <div class="block_content tab_content" id="mine" style="padding-left:30px;">	<!-- user hash graphs -->
+                <div class="block_content"> <!-- Right content block begin -->
 
+			<div id="hashstats" style="">	<!-- hash graphs -->
 			<?php
-				hashGraphs("mine", $userId, $interval);
+				hashGraphs($graph, $userId, $interval);
 			?>
+			</div>
 
-			<center><br>
-			<p style="padding-left:30px; padding-right:30px; margin-top:-50px; font-size:10px;">
-			This graph updates ~every hour if you have active workers.
+			<center>
+			<p style="padding-left:30px; padding-right:30px; margin-top:0px; font-size:10px;">
+			Hashrate graphs update every ~60 seconds if you have active workers.
 			</p></center>
 
+			<div id="financestats" style="">   <!-- financial graphs -->
 			<?php
-				//financialGraphs("mine", $userId, 5, "area");
+				financialGraphs($graph, $userId);
 			?>
-		</div>          <!-- nested block ends -->
+			</div>
 
-                <div class="block_content tab_content" id="pool" style="padding-left:30px;">	<!-- pool hash graphs -->
-
-			<?php hashGraphs("pool", "NULL", $interval); ?>
-
-		</div>          <!-- nested block ends -->
-
-                <div class="block_content tab_content" id="both" style="padding-left:30px;">	<!-- both hash graphs -->
-
-			<?php hashGraphs("both", $userId, $interval); ?>
-
-			<center><br>
-			<p style="padding-left:30px; padding-right:30px; margin-top:-50px; font-size:10px;">
-			This graph updates your stats ~every hour if you have active workers. Otherwise only the pool rate is shown.
-			</p></center>
-
-			<?php hashGraphs("both", $userId, $interval, "pie"); ?>
-
-		</div>          <!-- nested block ends -->
+		</div>          <!-- nested right content block ends -->
 
                 <div class="bendl"></div>
                 <div class="bendr"></div>

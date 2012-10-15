@@ -4,15 +4,17 @@
 
 // check if logged in
 if( !$cookieValid ){
-        header("Location: /stats.php");
+        header("Location: /stats");
         exit();
 }
 
-$numberResults = 20;
+$numberResults = 15;
 $last_no_blocks_found = 10;
 $BTC_per_block = 50; // don't keep this hardcoded
 $bitcoinController = new BitcoinClient($rpcType, $rpcUsername, $rpcPassword, $rpcHost);
 $difficulty = $bitcoinController->query("getdifficulty");
+
+if ($_GET["more"] == 'true') { $numberResults = 30; }
 
         // time = difficulty * 2**32 / hashrate
         // hashrate is in Mhash/s
@@ -94,8 +96,11 @@ $difficulty = $bitcoinController->query("getdifficulty");
 				<div class="block_head">
 					<div class="bheadl"></div>
 					<div class="bheadr"></div>
-
 					<h2>Top <?php echo $numberResults;?> Hashrates</h2>
+						<ul class="tabs">
+							<li style="font-size:9px;"><a href="?more=true">More</a>&nbsp;&nbsp;</li>
+							<li style="font-size:9px;"><a href="/statsAuth">Less</a></li>
+						</ul>
 				</div>		<!-- .block_head ends -->
 
 				<div class="block_content">
@@ -192,8 +197,11 @@ if( $cookieValid && $user_found == false )
 				<div class="block_head">
 					<div class="bheadl"></div>
 					<div class="bheadr"></div>
-
-					<h2>Top <?php echo $numberResults;?> Round Contributers</h2>
+					<h2>Top <?php echo $numberResults;?> Contributers</h2>
+						<ul class="tabs">
+							<li style="font-size:9px;"><a href="?more=true">More</a>&nbsp;&nbsp;</li>
+							<li style="font-size:9px;"><a href="/statsAuth">Less</a></li>
+						</ul>
 				</div>		<!-- .block_head ends -->
 
 				<div class="block_content">
@@ -395,7 +403,7 @@ echo '<ul><li><font color="orange">Server stats are also available in JSON forma
 // SHOW LAST (=$last_no_blocks_found) BLOCKS
 echo "<center><table class=\"stats_lastblocks\" width='100%' style='font-size:13px;'>";
 echo "<tr style='background-color:#B6DAFF;'><th scope=\"col\" align='left'>Block</th><th scope=\"col\" align='left'>Validity</th>".
-     "<th scope=\"col\" align='left'>Finder</th><th scope=\"col\" align='left'>Time</th> <th scope=\"col\" align='left'>Shares</th></tr>";
+     "<th scope=\"col\" align='left'>Finder</th><th scope=\"col\" align='left'>Date / Time</th> <th scope=\"col\" align='left'>Shares</th></tr>";
 
 $result = mysql_query("SELECT DISTINCT n.blockNumber, n.confirms, n.timestamp FROM winning_shares w, networkBlocks n WHERE w.blockNumber = n.blockNumber ORDER BY w.blockNumber DESC LIMIT " . $last_no_blocks_found);
 

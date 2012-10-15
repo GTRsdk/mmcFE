@@ -17,8 +17,9 @@ $f = 1;
 $f = $sitePercent / 100;
 
 // command line args
-if (isset($argv["1"])) { $lastNshares = $argv["1"]; } else { print("usage: $argv[0] <last N shares> <blocknumber>\n"); die(); }
-if (isset($argv["2"])) { $block = $argv["2"]; } else { print("usage: $argv[0] <last N shares> <blocknumber>\n"); die(); }
+if (isset($argv["1"])) { $lastNshares = $argv["1"]; } else { print("usage: $argv[0] <last N shares> <blocknumber> <userId>\n"); die(); }
+if (isset($argv["2"])) { $block = $argv["2"]; } else { print("usage: $argv[0] <last N shares> <blocknumber> <userId>\n"); die(); }
+if (isset($argv["3"])) { $uid = $argv["3"]; } else { print("usage: $argv[0] <last N shares> <blocknumber> <userId>\n"); die(); }
 
 if (isset($block)) {
 
@@ -57,8 +58,8 @@ if (isset($block)) {
 		$totalRoundShares = $totalRoundSharesR->id;
 
 		$userListCountQ = mysql_query("SELECT userId, sum(id) as id FROM ( ".
-						  "SELECT DISTINCT userId, sum(count) as id FROM shares_uncounted WHERE blockNumber <= ".$block." AND blockNumber >= ".$l_bound." GROUP BY userId ".
-						  "UNION DISTINCT SELECT userId, sum(count) as id FROM shares_counted WHERE blockNumber <= " .$block. " AND blockNumber >= ".$l_bound." GROUP BY userId ".
+						  "SELECT DISTINCT userId, sum(count) as id FROM shares_uncounted WHERE blockNumber <= ".$block." AND blockNumber >= ".$l_bound." AND userId = ".$uid." GROUP BY userId ".
+						  "UNION DISTINCT SELECT userId, sum(count) as id FROM shares_counted WHERE blockNumber <= " .$block. " AND blockNumber >= ".$l_bound." AND userId = ".$uid." GROUP BY userId ".
 						 " )a GROUP BY userId");
 
 		while ($userListCountR = mysql_fetch_object($userListCountQ)) {
@@ -116,3 +117,5 @@ echo "\nMiner Allocated: ".$overallReward."\n";
 echo "Pool Allocated: ".round((50 - $overallReward), 8)."\n";
 
 echo "Total: ".($overallReward + (round((50 - $overallReward), 8)))."\n\n";
+
+?>

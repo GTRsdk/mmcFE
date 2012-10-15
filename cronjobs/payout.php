@@ -1,6 +1,6 @@
 <?php
 
-$includeDirectory = "/var/www/pool/www/includes/";
+$includeDirectory = "/sites/mmc/www/includes/";
 
 include($includeDirectory."requiredFunctions.php");
 

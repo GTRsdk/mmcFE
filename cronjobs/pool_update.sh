@@ -18,7 +18,7 @@ if [ -e $PIDFILE ]; then
  exit
 else
  echo $PID > $PIDFILE
- cd /var/www/pool/cronjobs/
+ cd /sites/mmc/cronjobs/
  echo -e "\ncronjob.php\n-------------"; time $PHP_BIN cronjob.php; sleep 1;
  echo -e "\nshares.php\n-------------"; time $PHP_BIN shares.php; sleep 1;
  echo -e "\npayout.php\n-------------"; time $PHP_BIN payout.php; sleep 1;

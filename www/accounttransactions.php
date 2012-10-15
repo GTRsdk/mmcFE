@@ -64,26 +64,30 @@ $goodMessage = "";
 		<div class="block_head">
 		 <div class="bheadl"></div>
 		 <div class="bheadr"></div>
-		 <h2>Payout / Transaction Log <font size='1'>(starting from block 138,841)</font></h2>
+		 <h2>Payout / Transaction Log</h2>
+			<ul class="tabs">
+				<li style="font-size:9px;"><a href="#confirmed">Confirmed &nbsp;</a></li>
+				<li style="font-size:9px;"><a href="#unconfirmed">Unconfirmed &nbsp;</a></li>
+			</ul>
 		</div>
 
-		<div class="block_content" style="clear:;">
-		<br><center><p><font color="" size="1"><b>ATP</b> = Auto Threshold Payment, <b>MP</b> = Manual Payment, <b>Don_Fee</b> = donation amount + pool fees (if applicable)</font></p>
+		<div class="block_content tab_content" id="confirmed" style="clear:;">
+			<br><center><p><font color="" size="1"><b>ATP</b> = Auto Threshold Payment, <b>MP</b> = Manual Payment, <b>Don_Fee</b> = donation amount + pool fees (if applicable)</font></p>
 
-		<table cellpadding="1" cellspacing="1" width="98%" class="sortable">
-		<thead style="font-size:13px;">
-			<tr>
-			<th>TX #</th>
-			<th>Date</th>
-			<th>TX Type</th>
-			<th>Payment Address</th>
-			<th>Block #</th>
-			<th>Amount</th>
-			</tr>
-		</thead>
+			<table cellpadding="1" cellspacing="1" width="98%" class="sortable">
+			<thead style="font-size:13px;">
+				<tr>
+				<th>TX #</th>
+				<th>Date</th>
+				<th>TX Type</th>
+				<th>Payment Address</th>
+				<th>Block #</th>
+				<th>Amount</th>
+				</tr>
+			</thead>
 
-		<tbody>
-	        <?php
+			<tbody>
+		        <?php
 			if ((isset($_GET["page"])) && (is_numeric($_GET["page"]))) { $page = mysql_real_escape_string($_GET["page"]); } else { $page = 1; }
 			if ($page == 0) { $page = 1; }
 			$start = ($page * 15 - 15);
@@ -116,40 +120,76 @@ $goodMessage = "";
 	                                "", 10000+$obj->id, $obj->timestamp, $obj->transType, $obj->sendAddress, $obj->assocBlock, $obj->amount);
 	                }
 
-	        ?>
-		</tbody>
-		</table>
+		        ?>
+			</tbody>
+			</table>
 
-		<div class="pagination right" style="padding-right:8px;">
+			<div class="pagination right" style="">
+				<?php
 
-			<?php
+				if ($num_pages > 1) {
+					$page_no = 0;
 
-			if ($num_pages > 1) {
-				$page_no = 0;
-
-				if ($page > 1) {
-					echo "<a href='accounttransactions?page=".($page - 1)."'>&laquo;</a>";
-				}
-
-				while ($num_pages > $page_no) {
-					if  (($page_no + 1) == $page) {
-						echo "<a href='accounttransactions?page=".($page_no + 1)."' class='active'>" .($page_no + 1). "</a>";
-					} else {
-						echo "<a href='accounttransactions?page=".($page_no + 1)."'>" .($page_no + 1). "</a>";
+					if ($page > 1) {
+						echo "<a href='accounttransactions?page=".($page - 1)."'>&laquo;</a>";
 					}
-					$page_no++;
+
+					while ($num_pages > $page_no) {
+						if  (($page_no + 1) == $page) {
+							echo "<a href='accounttransactions?page=".($page_no + 1)."' class='active'>" .($page_no + 1). "</a>";
+						} else {
+							echo "<a href='accounttransactions?page=".($page_no + 1)."'>" .($page_no + 1). "</a>";
+						}
+						$page_no++;
+					}
+
+					if ($page < $page_no) {
+						echo "<a href='accounttransactions?page=".($page + 1)."'>&raquo;</a>";
+					}
 				}
-
-				if ($page < $page_no) {
-					echo "<a href='accounttransactions?page=".($page + 1)."'>&raquo;</a>";
-				}
-			}
-			?>
-
-		</div>		<!-- .pagination ends -->
-
+				?>
+			</div>		<!-- .pagination ends -->
 
 		</div>		<!-- nested block content ends -->
+
+
+		<div class="block_content tab_content" id="unconfirmed" style="">	<!-- unconfirmed rewards -->
+
+                        <center><br>
+			<p><font color="" size="2">Listed below are your estimated rewards and donations/fees for all blocks awaiting 120 confirmations.</font></p>
+			<table cellpadding="1" cellspacing="1" width="98%" class="sortable">
+                        <thead style="font-size:13px;">
+                                <tr>
+                                <th>Block #</th>
+                                <th>Estimated Reward</th>
+                                <th>Valid Shares</th>
+                                <th>Donation / Fee</th>
+                                <th>Validity</th>
+                                </tr>
+                        </thead>
+
+			<tbody style="font-size:12px;">
+			<?php
+				include("includes/helperFunctions.inc.php");
+
+				$unconf_blocksQ = mysql_query("SELECT DISTINCT blockNumber from `networkBlocks` WHERE `confirms` < 120 AND `confirms` > 0 ORDER BY blockNumber DESC LIMIT 10");
+
+				while ($blocks = mysql_fetch_object($unconf_blocksQ)) {
+					$block = $blocks->blockNumber;
+					estimate_user_rewards($block, $userId);
+					$pendingTotal += $userReward;
+					$pendingFee += $donation;
+				}
+				echo "<tr><td></td><td></td><td></td><td></td><td></td></tr>";
+				echo "<tr><td><b>Unconfirmed Totals:</b></td><td><b>" .number_format($pendingTotal, 8, '.', ''). "</b></td><td></td><td><b>" .number_format($pendingFee, 8, '.', ''). "</b></td><td></td></tr>";
+			?>
+			</tbody>
+
+			</table></center>
+
+		</div>		<!-- nested block content ends -->
+
+
 		<div class="bendl"></div>
 		<div class="bendr"></div>
 		</div>

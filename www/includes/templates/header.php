@@ -74,9 +74,10 @@ else $pageTitle = outputPageTitle(). " ". $pageTitle;
     <div id="ministats">
 	<table border="0">
 	<tr>
-<!--	<td><li>btc/usd: $<?php print $settings->getsetting('mtgoxlast'); ?>&nbsp;&nbsp;&nbsp;&nbsp;</li></td>
--->	<td><li>Pool Hashrate: <?php print round($settings->getsetting('currenthashrate')/1, 2); ?> KH/s&nbsp;&nbsp;&nbsp;&nbsp;</li></td>
+	<td><li>btc/usd: $<?php print $settings->getsetting('mtgoxlast'); ?>&nbsp;&nbsp;&nbsp;&nbsp;</li></td>
+	<td><li>Pool Hashrate: <?php print round($settings->getsetting('currenthashrate')/1000, 2); ?> GH/s&nbsp;&nbsp;&nbsp;&nbsp;</li></td>
 	<td><li>Pool Workers: <?php print $settings->getsetting('currentworkers'); ?>&nbsp;&nbsp;&nbsp;&nbsp;</li></td>
+	<td><li><a href="/osList">DTD+WTD</a>: &#3647;<?php print round(($settings->getsetting('donatedtodate') + $settings->getsetting('tobedonated')), 4); ?> <font size="1"><!--BTC--></font></li></td>
 	</tr>
 	</table>
     </div>

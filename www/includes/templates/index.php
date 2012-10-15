@@ -52,12 +52,7 @@
                  </div>
                  <div class="block_content" style="padding:10px;">
 
-Direct mining access to the pool:<br />
-http://ihatedigg.com:8322<br /><br />
-
-Mining via failover proxy (Requires manual proxy config):<br />
-http://ihatedigg.com:8000<br />
-http://ihatedigg.com:8337<br />
+mmcfe V2
 
 
                 </div>          <!-- nested block ends -->

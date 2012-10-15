@@ -25,7 +25,10 @@ if (isset($_POST["act"])) {
 
 				//Send $currentBalance to $paymentAddress
 				//Validate that a $paymentAddress has been set & is valid before sending
-				$isValidAddress = $bitcoinController->validateaddress($paymentAddress);
+				if (!empty($paymentAddress)) {
+					$isValidAddress = $bitcoinController->validateaddress($paymentAddress);
+				}
+
 				if($isValidAddress){
 					//Subtract TX feee
 					$currentBalance = $currentBalance - 0.005;
@@ -46,13 +49,13 @@ if (isset($_POST["act"])) {
 						//Set new variables so it appears on the page flawlessly
 						$currentBalance = 0;
 					}else{
-						$returnError = "Commodity failed to send.";
+						$returnError = "Commodity failed to send. Contact site support immediately.";
 					}
 				}else{
-					$returnError = "That isn't a valid Bitcoin address";
+					$returnError = "Invalid or missing Bitcoin payment address.";
 				}
 			}else{
-				$returnError = "You have no money in your account!";
+				$returnError = "You have no money in your account.";
 			}
 		}
 
@@ -187,7 +190,7 @@ if ($returnError) { echo "<div class=\"message errormsg\"><p>".antiXss($returnEr
 			<tr><td>User Id: </td><td><?php echo antiXss($userId); ?></td></tr>
 			<tr><td><a href="api?api_key=<?php echo antiXss($userApiKey) ?>" style="color: blue" target="_blank">API</a> Key: </td><td><h6><font size="1"><?php echo antiXss($userApiKey); ?></font></h6></td></tr>
 			<tr><td>Payment Address: </td><td><input type="text" name="paymentAddress" value="<?php echo antiXss($paymentAddress)?>" size="40"></td></tr>
-			<tr><td>Donation %: </td><td><input type="text" name="donatePercent" value="<?php echo antiXss($donatePercent);?>" size="4"><font size="1"> [additional donation percentage]</font></td></tr>
+			<tr><td>Donation %: </td><td><input type="text" name="donatePercent" value="<?php echo antiXss($donatePercent);?>" size="4"><font size="1"> [donation amount in percent (example: 0.5)]</font></td></tr>
 			<tr><td>Automatic Payout Threshold: </td><td valign="top"><input type="text" name="payoutThreshold" value="<?php echo antiXss($payoutThreshold);?>" size="5" maxlength="5"> <font size="1">[0.10-25 BTC. Set to '0' for no auto payout]</font></td></tr>
 			<tr><td>4 digit PIN: </td><td><input type="password" name="authPin" size="4" maxlength="4"><font size="1"> [The 4 digit PIN you chose when registering]</font></td></tr>
 		</table>

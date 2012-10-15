@@ -4,7 +4,7 @@
 	include("includes/blocksAuth.inc.php");
 
 	// number of graph items to show
-	$count = 20;
+	$count = 85;
 
 	// check if logged in
 	if( !$cookieValid ){
@@ -63,48 +63,25 @@ $last_no_blocks_found = 50;
 	                	<div class="bheadr"></div>
 	                	<h2>Pool Luck <font size="1">over last <?php print $count; ?> blocks</font></h2>
 
-				<ul class="tabs">
-					<li><a href="#line">Line &nbsp;</a></li>
-					<li><a href="#bar">Bar</a></li>
-				</ul>
 	                </div>	<!-- .block_head ends -->
 
-		                <div class="block_content tab_content" id="line" style="padding-left:30px;">
+		                <div id="" class="block_content" style="">
 
-					<table class="stats" rel="line" cellpadding="0" cellspacing="0" width="" style="">
+					<div id="chart" style="">
+						<?php shares_per_block_new($count); ?>
+					</div>
 
-						<?php shares_per_block($count); ?>
-					</table>
-
-					<center><br>
+					<center>
 					<p style="padding-left:30px; padding-right:30px; font-size:10px;">
 					The graph above illustrates N shares to find a block vs. N Shares expected to find a block based on
-					difficulty and assuming a zero variance scenario.
+					difficulty assuming a zero variance scenario. Additionally our average number of shares per block is displayed (effective difficulty/pool luck).
 					</p></center>
 
 		                </div>          <!-- nested block content ends -->
 
-
-		                <div class="block_content tab_content" id="bar" style="padding-left:30px;">
-
-					<table class="stats" rel="bar" cellpadding="0" cellspacing="0" width="" style="">
-
-						<?php shares_per_block($count); ?>
-
-					</table>
-
-					<center><br>
-					<p style="padding-left:30px; padding-right:30px; font-size:10px;">
-					The graph above illustrates N shares to find a block vs. N Shares expected to find a block based on
-					difficulty and assuming a zero variance scenario.
-					</p></center>
-
-		        	</div>          <!-- nested block content ends -->
-
 	                <div class="bendl"></div>
 	                <div class="bendr"></div>
 	                </div>
-
 
 	<!-- LAST N BLOCKS FOUND STATS BLOCK -->
 

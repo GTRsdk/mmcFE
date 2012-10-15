@@ -15,7 +15,7 @@
 //
 
 //Set page starter variables//
-$includeDirectory = "/var/www/pool/www/includes/";
+$includeDirectory = "/sites/mmc/www/includes/";
 
 //Include site functions
 include($includeDirectory."requiredFunctions.php");

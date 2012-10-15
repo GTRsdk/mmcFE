@@ -52,7 +52,7 @@
 
 <p>
 
-Here's the gnus! 
+Put some news here, yo! 
 
 </p>
                 </div>          <!-- nested block ends -->

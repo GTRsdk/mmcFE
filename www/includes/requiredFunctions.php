@@ -19,24 +19,24 @@ Website Reference:http://www.gnu.org/licenses/gpl-2.0.html
 // RPC Bitcoind Credentials
 //
 $rpcType = "http"; 				// http or https
-$rpcUsername = "user"; 				// username as specified in your bitcoin.conf configuration file
-$rpcPassword = "pass"; 				// password
-$rpcHost = "localhost:8333";
+$rpcUsername = ""; 				// username as specified in your bitcoin.conf configuration file
+$rpcPassword = ""; 				// password
+$rpcHost = "localhost";
 
 
 // MySql Credentials
 //
 $dbHost = "localhost";
-$dbUsername = "dbuser";
-$dbPassword = "dbpass";
+$dbUsername = "";
+$dbPassword = "";
 $dbPort = "3306";
-$dbDatabasename = "databasename";
+$dbDatabasename = "";
 
 // Cookie settings (more info @http://us.php.net/manual/en/function.setcookie.php)
 //
-$cookieName = "asdfasdf"; 				//Set this to what ever you want (text string)
+$cookieName = ""; 				//Set this to what ever you want (text string)
 $cookiePath = "/";				//Choose your path!
-$cookieDomain = "ihatedigg.com";			//Set this to your domain
+$cookieDomain = ".domain.net";			//Set this to your domain
 
 include("bitcoinController/bitcoin.inc.php");	// Dont touch.
 

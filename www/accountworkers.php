@@ -138,8 +138,9 @@ Do not delete Workers unless you are certain all of their shares have been count
 </li></ul>
 </font>
 
+<center>
 <table border="0" cellpadding="3" cellspacing="3">
-<tr><td><u>Worker Name </u></td><td><u>Password</u></td><td><u>Active</u></td><td><u>Mhash/s</u></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>Worker Name</td><td>Password</td><td>Active</td><td>Mhash/s</td><td>&nbsp;</td><td>&nbsp;</td></tr>
 <?php
 //Get list of workers from the associatedUserId
 $getWorkers = mysql_query("SELECT `id`, `username`, `password`, active, hashrate FROM `pool_worker` WHERE `associatedUserId` = '".$userId."'");
@@ -166,6 +167,7 @@ $realUsername = $splitUsername[1];
 }
 ?>
 </table>
+</center>
 
 <!-- Add new Worker -->
 <p><center><h2>Add a New Worker</h2>
